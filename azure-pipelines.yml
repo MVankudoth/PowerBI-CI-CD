@@ -2,7 +2,6 @@
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
-
 trigger:
 - main
 
@@ -32,16 +31,5 @@ steps:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
     publishLocation: 'Container'
-
-- task: PowerBIActions@5
-  inputs:
-    action: 'Publish'
-    authenticationType: 'ServicePrincipal'
-    tenantId: '$(tenantId)'
-    applicationId: '$(applicationId)'
-    workspaceId: '$(workspaceId)'
-    datasetId: '$(datasetId)'
-    filePath: '$(Build.ArtifactStagingDirectory)/sample report.pbix'
-    servicePrincipalKey: '$(servicePrincipalKey)'
 
 
