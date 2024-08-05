@@ -21,15 +21,11 @@ steps:
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
     OverWrite: true
 
-- script: |
-    echo "Listing files in $(Build.ArtifactStagingDirectory)"
-    ls -R $(Build.ArtifactStagingDirectory)
-  displayName: 'List artifact staging directory files'
-
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
     publishLocation: 'Container'
+
 
 
