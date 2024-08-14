@@ -21,7 +21,7 @@ steps:
 - task: CopyFiles@2
   inputs:
     SourceFolder: '$(Build.SourcesDirectory)'
-    Contents: '**/*.pbix'
+    Contents: '**/*.pbip'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
     OverWrite: true
 
