@@ -21,16 +21,16 @@ steps:
 - task: CopyFiles@2
   inputs:
     SourceFolder: '$(Build.SourcesDirectory)'
-    Contents: '**/*.{pbix,pbip}'
+    Contents: '**/*.pbix'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
     OverWrite: true
-
 
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
     publishLocation: 'Container'
+
 
 
 
