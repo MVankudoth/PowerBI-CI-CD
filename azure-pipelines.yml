@@ -1,35 +1,28 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-variables:
-  - name: system.debug
-    value: true
-
 trigger:
-- main
+  branches:
+    include:
+      - main  # Trigger the pipeline for changes in 'main' branch
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'windows-latest'
 
 steps:
-- script: |
-    echo "Listing files in $(Build.SourcesDirectory)"
-    ls -R $(Build.SourcesDirectory)
-  displayName: 'List source directory files'
-
-- task: CopyFiles@2
+- task: PowerShell@2
   inputs:
-    SourceFolder: '$(Build.SourcesDirectory)'
-    Contents: '**/*.pbix'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
-    OverWrite: true
+    filePath: 'scripts/Authenticate.ps1'  # PowerShell script to authenticate
+    pwsh: true
 
-- task: PublishBuildArtifacts@1
+- task: PowerShell@2
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
+    filePath: 'scripts/Publish-Report.ps1'  # PowerShell script to publish PBIX
+    arguments: '-pbixPath $(System.DefaultWorkingDirectory)/reports/YourReport.pbix'  # Replace with actual report path
+    pwsh: true
+
+- task: PowerShell@2
+  inputs:
+    filePath: 'scripts/Refresh-Dataset.ps1'  # PowerShell script to refresh dataset
+    pwsh: true
+
 
 
 
