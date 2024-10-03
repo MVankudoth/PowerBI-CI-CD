@@ -1,46 +1,35 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+variables:
+  - name: system.debug
+    value: true
+
 trigger:
-  branches:
-    include:
-      - main
+- main
 
-stages:
-- stage: Dev
-  jobs:
-  - job: DeployToDev
-    pool:
-      vmImage: 'windows-latest'
-    steps:
-    - task: PowerShell@2
-      inputs:
-        filePath: 'C:\Users\MVankudoth\Downloads\PowerBI-CI-CD\Reports'
-        arguments: '-pbixPath $(System.DefaultWorkingDirectory)/reports/DevReport.pbix -workspaceId DEV_WORKSPACE_ID'
-        pwsh: true
+pool:
+  vmImage: ubuntu-latest
 
-- stage: Test
-  dependsOn: Dev
-  jobs:
-  - job: DeployToTest
-    pool:
-      vmImage: 'windows-latest'
-    steps:
-    - task: PowerShell@2
-      inputs:
-        filePath: 'C:\Users\MVankudoth\Downloads\PowerBI-CI-CD\Reports'
-        arguments: '-pbixPath $(System.DefaultWorkingDirectory)/reports/TestReport.pbix -workspaceId TEST_WORKSPACE_ID'
-        pwsh: true
+steps:
+- script: |
+    echo "Listing files in $(Build.SourcesDirectory)"
+    ls -R $(Build.SourcesDirectory)
+  displayName: 'List source directory files'
 
-- stage: Prod
-  dependsOn: Test
-  jobs:
-  - job: DeployToProd
-    pool:
-      vmImage: 'windows-latest'
-    steps:
-    - task: PowerShell@2
-      inputs:
-        filePath: 'C:\Users\MVankudoth\Downloads\PowerBI-CI-CD\Reports'
-        arguments: '-pbixPath $(System.DefaultWorkingDirectory)/reports/ProdReport.pbix -workspaceId PROD_WORKSPACE_ID'
-        pwsh: true
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)'
+    Contents: '**/*.pbix'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    OverWrite: true
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
 
 
 
